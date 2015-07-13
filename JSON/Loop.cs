@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Web;
+using System.IO;
+using System.Net;
+using Newtonsoft.Json;
 
 using Rhino;
 using Rhino.Geometry;
 using Rhino.Display;
+
+//http://statdb.nstac.go.jp/api/1.0b/app/getStatsList?appId=c4027947d9d064ddbc034e3520f0a95d2935ade5&statsCode=00200&searchWord=%E2%80%98%E4%BA%BA%E5%8F%A3%E6%8E%A8%E8%A8%88%E2%80%99
+//http://statdb.nstac.go.jp/api/1.0b/app/getStatsData?appId=c4027947d9d064ddbc034e3520f0a95d2935ade5&statsDataId=0003104197&cdCat01From=000&cdCat01To=002
+//http://statdb.nstac.go.jp/api/1.0b/app/json/getStatsData?appId=c4027947d9d064ddbc034e3520f0a95d2935ade5&statsDataId=0003104197&cdCat01From=000&cdCat01To=002
+//人口推計 平成26年10月1日現在人口推計　都道府県，年齢（5歳階級），男女別人口－総人口
+
 
 namespace JSON
 {
@@ -14,6 +24,25 @@ namespace JSON
     {
         public override void Setup()
         {
+            var url = "http://statdb.nstac.go.jp/api/1.0b/app/json/getStatsData?appId=c4027947d9d064ddbc034e3520f0a95d2935ade5&statsDataId=0003104197&cdCat01From=000&cdCat01To=002";
+
+            va
+
+            WebRequest request = WebRequest.Create(url);
+            Stream response_stream  = request.GetResponse().GetResponseStream();
+            StreamReader reader = new StreamReader(response_stream);
+
+            string text = reader.ReadToEnd();
+            string text_replace1 = text.Replace("@", "at");
+            string text_replace2 = text.Replace("$", "doru");
+
+            Statistics obj = JsonConvert.DeserializeObject<Statistics>(text_replace2);
+
+            string tes = reader.ReadToEnd();
+
+            RhinoApp.WriteLine(tes);
+
+            reader.Close();
 
         }
         
