@@ -26,25 +26,40 @@ namespace JSON
         {
             var url = "http://statdb.nstac.go.jp/api/1.0b/app/json/getStatsData?appId=c4027947d9d064ddbc034e3520f0a95d2935ade5&statsDataId=0003104197&cdCat01From=000&cdCat01To=002";
 
-            va
+            var json = RequestToAPI(url);
 
-            WebRequest request = WebRequest.Create(url);
-            Stream response_stream  = request.GetResponse().GetResponseStream();
-            StreamReader reader = new StreamReader(response_stream);
-
-            string text = reader.ReadToEnd();
-            string text_replace1 = text.Replace("@", "at");
-            string text_replace2 = text.Replace("$", "doru");
-
-            Statistics obj = JsonConvert.DeserializeObject<Statistics>(text_replace2);
-
-            string tes = reader.ReadToEnd();
-
-            RhinoApp.WriteLine(tes);
-
-            reader.Close();
-
+            RhinoApp.WriteLine(json.Substring(0, 100));
         }
+
+        private static string RequestToAPI(string url)
+        {
+            WebRequest req = WebRequest.Create(url);
+            HttpWebResponse response = null;
+            string rxText = string.Empty;
+            try
+            {
+                // レスポンスの取得
+                response = (HttpWebResponse)req.GetResponse();
+                Stream resStream = response.GetResponseStream();
+                var sr = new StreamReader(resStream, Encoding.UTF8);
+                rxText = sr.ReadToEnd();
+                sr.Close();
+                resStream.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return string.Empty;
+            }
+            finally
+            {
+                if (response != null)
+                    response.Close();
+            }
+
+            return rxText;
+        }
+
         
         public override void Draw()
         {
