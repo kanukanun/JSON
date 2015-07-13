@@ -28,15 +28,11 @@ namespace JSON
 
             var json = RequestToAPI(url);
 
-            string text_replace1 = json.Replace("@", "at");
-            string text_replace2 = text_replace1.Replace("$", "doru");
-
-            Statistics.VALUE obj = JsonConvert.DeserializeObject<Statistics.VALUE>(text_replace2);
+            Statistics.VALUE obj = JsonConvert.DeserializeObject<Statistics.VALUE>(json);
 
             string scale = obj.__invalid_name__doru;
 
-            RhinoApp.WriteLine(json.Substring(0, 100));
-            RhinoApp.WriteLine(String.Format("{0}", obj));
+            RhinoApp.WriteLine(json.Substring(1, 100));
         }
 
         private static string RequestToAPI(string url)
